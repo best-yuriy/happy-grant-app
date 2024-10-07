@@ -8,6 +8,9 @@
   height: 10%;
   align-content: center;
   border-bottom: thin solid lightgrey;
+  font-size: 2em;
+  color: darkgrey;
+  font-weight: bold;
 }
 
 #day-happiness-prompt-body {
