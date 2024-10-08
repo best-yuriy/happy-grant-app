@@ -34,7 +34,7 @@ function DayHappinessPrompt() {
 
     function addDays(numDays) {
         const newDate = state.date.add(numDays, 'day');
-        if (dayjs().startOf('day').isAfter(newDate)) {
+        if (!dayjs().startOf('day').isBefore(newDate)) {
             setActiveDate({ ...state, date: newDate });
         }
     }
