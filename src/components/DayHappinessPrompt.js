@@ -9,22 +9,38 @@ import crying from '../assets/crying.png'
 import { useState } from 'react'
 import dayjs from 'dayjs'
 
-function HappinessLevel({ percent, altText, src }) {
+function HappinessLevel({ percent, altText, src, selected }) {
     const onClick = () => console.log(`happiness level: ${percent}`);
-    return <img className="happiness-level" src={src} onClick={onClick} alt={altText}/>;
+    return (
+        <img
+            key={`happiness-level-${percent}`}
+            className={`happiness-level${selected ? ' selected' : ''}`}
+            src={src}
+            onClick={onClick}
+            alt={altText}
+        />
+    );
 }
 
 function DayHappinessPrompt() {
-    const [activeDate, setActiveDate] = useState(dayjs().startOf('day'));
+    function newState() {
+        return { 
+            date: dayjs().startOf('day'),
+            value: 25
+        };
+    }
+
+    const [state, setActiveDate] = useState(newState());
+
     function addDays(numDays) {
-        const newDate = activeDate.add(numDays, 'day');
+        const newDate = state.date.add(numDays, 'day');
         if (dayjs().startOf('day').isAfter(newDate)) {
-            setActiveDate(newDate);
+            setActiveDate({ ...state, date: newDate });
         }
     }
     return (
         <div id='day-happiness-prompt'>
-            <div id='day-happiness-prompt-header'>{activeDate.format('MMM DD YYYY')}</div>
+            <div id='day-happiness-prompt-header'>{state.date.format('MMM DD YYYY')}</div>
             <div id='day-happiness-prompt-body'>
                 <img id='day-happiness-prompt-left'
                     src={chevronBackward}
@@ -32,11 +48,15 @@ function DayHappinessPrompt() {
                     onClick={() => addDays(-1)}
                 />
                 <div id='happiness-level-prompt'>
-                    <HappinessLevel percent={100} src={ecstatic} altText={":D"}/>
-                    <HappinessLevel percent={75} src={happy} altText={":)"}/>
-                    <HappinessLevel percent={50} src={thoughtful} altText={":/"}/>
-                    <HappinessLevel percent={25} src={sad} altText={":("}/>
-                    <HappinessLevel percent={0} src={crying} altText={";("}/>
+                    {
+                        [
+                            { percent: 100, src: ecstatic, altText: 'ecstatic', selected: state.value === 100 },
+                            { percent: 75, src: happy, altText: 'happy', selected: state.value === 75 },
+                            { percent: 50, src: thoughtful, altText: 'thoughtful', selected: state.value === 50 },
+                            { percent: 25, src: sad, altText: 'sad', selected: state.value === 25 },
+                            { percent: 0, src: crying, altText: 'crying', selected: state.value === 0 }
+                        ].map(props => HappinessLevel(props))
+                    }
                 </div>
                 <img id='day-happiness-prompt-right'
                     src={chevronForward}

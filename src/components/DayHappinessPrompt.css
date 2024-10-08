@@ -50,5 +50,16 @@
 
 .happiness-level:hover {
   background-color: lightblue;
+  border-color: darkgrey;
+}
+
+.happiness-level.selected {
+  background-color: lightblue;
   border-color: grey;
+
+}
+
+.happiness-level.selected:hover {
+  background-color: transparent;
+  border-color: darkgrey;
 }
