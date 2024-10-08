@@ -9,35 +9,66 @@ import crying from '../assets/crying.png'
 import { useState } from 'react'
 import dayjs from 'dayjs'
 
-function HappinessLevel({ percent, altText, src, selected }) {
-    const onClick = () => console.log(`happiness level: ${percent}`);
+const happinessLevelRepo = [];
+
+function setHappinessLevel(date, value) {
+    const happinessLevel = happinessLevelRepo.find(obj => obj.date.isSame(date));
+    if (happinessLevel) {
+        happinessLevel.value = value;
+    } else {
+        happinessLevelRepo.push({ date, value });
+    }
+}
+
+function getHappinessLevel(date) {
+    return happinessLevelRepo.find(obj => obj.date.isSame(date));
+}
+
+function HappinessLevel({ percent, alt, src, selected, onClick }) {
     return (
         <img
             key={`happiness-level-${percent}`}
             className={`happiness-level${selected ? ' selected' : ''}`}
             src={src}
+            alt={alt}
             onClick={onClick}
-            alt={altText}
         />
     );
 }
 
 function DayHappinessPrompt() {
-    function newState() {
-        return { 
-            date: dayjs().startOf('day'),
-            value: 25
-        };
-    }
 
-    const [state, setActiveDate] = useState(newState());
+    const [state, setState] = useState({ date: dayjs().startOf('day'), value: null });
 
-    function addDays(numDays) {
+    function changeDays(numDays) {
         const newDate = state.date.add(numDays, 'day');
+        const priorRecord = getHappinessLevel(newDate) || {};
         if (!dayjs().startOf('day').isBefore(newDate)) {
-            setActiveDate({ ...state, date: newDate });
+            setState({ value: priorRecord.value, date: newDate });
         }
     }
+
+    function toggleHappinessLevel(value) {
+        const newValue = state.value === value ? null : value
+        setState({ ...state, value: newValue });
+    }
+
+    function happinessLevel(value, src, alt) {
+        function onClick() {
+            setHappinessLevel(state.date, state.value === value ? null : value);
+            toggleHappinessLevel(value);
+        }
+        return (
+            <HappinessLevel
+                percent={value}
+                selected={state.value === value}
+                src={src}
+                altText={alt}
+                onClick={onClick}
+            />
+        )
+    }
+
     return (
         <div id='day-happiness-prompt'>
             <div id='day-happiness-prompt-header'>{state.date.format('MMM DD YYYY')}</div>
@@ -45,23 +76,19 @@ function DayHappinessPrompt() {
                 <img id='day-happiness-prompt-left'
                     src={chevronBackward}
                     alt='back'
-                    onClick={() => addDays(-1)}
+                    onClick={() => changeDays(-1)}
                 />
                 <div id='happiness-level-prompt'>
-                    {
-                        [
-                            { percent: 100, src: ecstatic, altText: 'ecstatic', selected: state.value === 100 },
-                            { percent: 75, src: happy, altText: 'happy', selected: state.value === 75 },
-                            { percent: 50, src: thoughtful, altText: 'thoughtful', selected: state.value === 50 },
-                            { percent: 25, src: sad, altText: 'sad', selected: state.value === 25 },
-                            { percent: 0, src: crying, altText: 'crying', selected: state.value === 0 }
-                        ].map(props => HappinessLevel(props))
-                    }
+                    {happinessLevel(100, ecstatic,   'ecstatic'  )}
+                    {happinessLevel(75,  happy,      'happy'     )}
+                    {happinessLevel(50,  thoughtful, 'thoughtful')}
+                    {happinessLevel(25,  sad,        'sad'       )}
+                    {happinessLevel(0,   crying,     'crying'    )}
                 </div>
                 <img id='day-happiness-prompt-right'
                     src={chevronForward}
                     alt='forward'
-                    onClick={() => addDays(1)}
+                    onClick={() => changeDays(1)}
                 />
             </div>
         </div>

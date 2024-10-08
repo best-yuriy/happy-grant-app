@@ -58,8 +58,3 @@
   border-color: grey;
 
 }
-
-.happiness-level.selected:hover {
-  background-color: transparent;
-  border-color: darkgrey;
-}
