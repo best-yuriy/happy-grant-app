@@ -8,21 +8,7 @@ import sad from '../assets/sad.png'
 import crying from '../assets/crying.png'
 import { useState } from 'react'
 import dayjs from 'dayjs'
-
-const happinessLevelRepo = [];
-
-function setHappinessLevel(date, value) {
-    const happinessLevel = happinessLevelRepo.find(obj => obj.date.isSame(date));
-    if (happinessLevel) {
-        happinessLevel.value = value;
-    } else {
-        happinessLevelRepo.push({ date, value });
-    }
-}
-
-function getHappinessLevel(date) {
-    return happinessLevelRepo.find(obj => obj.date.isSame(date));
-}
+import { setHappinessLevel, getHappinessLevel } from '../services/HappinessLevelRepo'
 
 function HappinessLevel({ percent, alt, src, selected, onClick }) {
     return (

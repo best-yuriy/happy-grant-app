@@ -9,6 +9,11 @@ import {
     Tooltip
 } from 'chart.js'
 import dayjs from 'dayjs';
+import weekday from 'dayjs/plugin/weekday'
+import { setHappinessLevel, getHappinessLevel } from '../services/HappinessLevelRepo'
+import { useState } from 'react';
+
+dayjs.extend(weekday);
 
 Chart.register(
     CategoryScale,
@@ -16,30 +21,11 @@ Chart.register(
     LinearScale,
     PointElement,
     Tooltip
-)
+);
 
-const today = dayjs().startOf('day');
-const dates = 
-    Array(31)
-        .keys()
-        .map(i => today.subtract(i, 'day').format('YYYY-MM-DD'))
-        .toArray()
-        .reverse();
-
-const happinessData = dates.map(() => Math.floor(Math.random() * 5) * 25);
-
-function HappinessStats() {
-    const data = {
-        labels: dates,
-        datasets: [
-            {
-                data: happinessData,
-                borderColor: 'lightblue'
-            }
-        ]
-    };
-
-    const options = {
+// FIXME: we shouldn't need labels here, but we do due to the bug with ticks.
+function chartOptions(labels) {
+    return {
         scales: {
             x: {
                 ticks: {
@@ -49,8 +35,14 @@ function HappinessStats() {
                     // FIXME: for some reason, value and index give me the same value
                     // and ticks contains an array with the same label repeated over
                     // and over.
-                    callback: (value, index, ticks) => dayjs(dates[index]).format('MM/DD')
+                    callback: function(value, index, ticks) {
+                        return dayjs(labels[index]).format('MM/DD')
+                    }
                 }
+            },
+            y: {
+                min: 0,
+                max: 100
             }
         },
         plugins: {
@@ -61,12 +53,96 @@ function HappinessStats() {
             }
         }
     };
+}
+
+// This is for test purposes. We should be using getHappinessLevel here.
+function ensureHappinessLevel(date) {
+    let res = getHappinessLevel(date);
+    if (res !== 0 && !res) {
+        res = Math.floor(Math.random() * 5) * 25;
+        setHappinessLevel(date, res);
+    }
+    return res;
+}
+
+// start: dayjs - the start date
+// end: dayjs - the end date (inclusive)
+// step: dayjs => dayjs - function to calculate the next date
+// get: dayjs => T - function to calculate the value for the date
+function getRange(start, end, step, get) {
+    const res = [];
+    
+    let date = start;
+    while (!date.isAfter(end)) {
+        res.push(get(date));
+        date = step(date)
+    }
+
+    return res;
+}
+
+function getDailyStats(start, end) {
+    return getRange(start, end, d => d.add(1, 'day'), ensureHappinessLevel);
+}
+
+function getDailyLabels(start, end) {
+    return getRange(start, end, d => d.add(1, 'day'), x => x);
+}
+
+function getWeeklyStats(start, end) {
+    return getRange(start, end, d => d.add(7, 'day'), ensureHappinessLevel);
+}
+
+function getWeeklyLabels(start, end) {
+    return getRange(start, end, d => d.add(7, 'day'), x => x);
+}
+
+function HappinessStats() {
+    const [state, setState] = useState({ mode: '7d' });
+
+    const today = dayjs().startOf('day');
+
+    let start;
+    let stats;
+    let dates;
+
+    switch(state.mode) {
+        case '7d':
+            start = today.subtract(6, 'day')
+            stats = getDailyStats(start, today)
+            dates = getDailyLabels(start, today)
+            break;
+        case '6w':
+            start = today.weekday(0).subtract(7 * 6, 'day')
+            stats = getWeeklyStats(start, today)
+            dates = getWeeklyLabels(start, today)
+            break;
+        default:
+            throw new Error(`Invalid mode: ${state.mode}.`);        
+    }
+
+    const labels = dates.map(d => d.format('YYYY-MM-DD'));
+    const happinessData = stats.map(d => d.value);
+
+    const chartData = {
+        labels: labels,
+        datasets: [
+            {
+                data: happinessData,
+                borderColor: 'lightblue'
+            }
+        ]
+    };
 
     return (
         <div id='happiness-stats'>
+            <div className='stats-mode-selector'>
+                <button className='stats-mode-choice' onClick={() => setState({ mode: '7d' })}>7d</button>
+                <button className='stats-mode-choice' onClick={() => setState({ mode: '6w' })}>6w</button>
+            </div>
             <Line
-                data={data}
-                options={options}
+                data={chartData}
+                options={chartOptions(labels)}
             />
         </div>
     );
