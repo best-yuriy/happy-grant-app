@@ -7,7 +7,8 @@ function getData() {
 }
 
 function putData(data) {
-    const updated = merge(getData(), data);
+    const mergeOptions = { arrayMerge: (first, second, options) => second };
+    const updated = merge(getData(), data, mergeOptions);
     localStorage.setItem(APP_NAMESPACE, JSON.stringify(updated));
 }
 

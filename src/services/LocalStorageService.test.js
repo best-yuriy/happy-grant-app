@@ -22,4 +22,10 @@ describe('LocalStorageService', () => {
         putData({ 'foo': 'newfoo', 'bazz': 789 });
         expect(getData()).toEqual({ 'foo': 'newfoo', 'bar': 456, 'bazz': 789 });
     });
+
+    it('should overwrite arrays when updating array data in local storage', () => {
+        putData({ 'foo': [1, 2] });
+        putData({ 'foo': [3, 4, 5] });
+        expect(getData()).toEqual({ 'foo': [3, 4, 5] });
+    });
 });
