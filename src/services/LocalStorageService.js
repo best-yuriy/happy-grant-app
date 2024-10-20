@@ -2,6 +2,9 @@ const merge = require('deepmerge');
 
 const APP_NAMESPACE = 'happy-grant';
 
+/**
+ * @returns Current data at the app's namespace or empty object.
+ */
 function getData() {
     return JSON.parse(localStorage.getItem(APP_NAMESPACE)) || {};
 }
