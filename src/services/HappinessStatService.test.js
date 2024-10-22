@@ -1,4 +1,8 @@
+const dayjs = require('dayjs');
+const weekday = require("dayjs/plugin/weekday");
 const { getStat, setStat, getStatsDaily, getStatsWeekly } = require('./HappinessStatService')
+
+dayjs.extend(weekday);
 
 describe('HappinessStatsService', () => {
 
@@ -82,5 +86,45 @@ describe('HappinessStatsService', () => {
 
         expect(getStatsDaily(day4, day6))
             .toEqual([{ date: day4, value: 50 }]);
+    });
+
+    it('should get weekly averages', () => {
+
+        // const weekday0 = dayjs(day1).weekday(0);
+        const day = (nw, nd) => dayjs(day1).weekday(7 * nw + nd);
+        const str = (nw, nd) => day(nw, nd).format('YYYY-MM-DD');
+
+        // week 1: average 12
+        setStat(day(1, 0), 10);
+        setStat(day(1, 1), 14);
+
+        // week 2: average 23
+        setStat(day(2, 0), 20);
+        setStat(day(2, 4), 26);
+
+        // week 3: average 34
+        setStat(day(3, 1), 30);
+        setStat(day(3, 3), 38);
+
+        // week 4: average 55
+        setStat(day(4, 2), 40);
+        setStat(day(4, 3), 50);
+        setStat(day(4, 4), 60);
+        setStat(day(4, 6), 70);
+
+        // week 5: average 80
+        setStat(day(5, 0), 80);
+
+        // week 6: no data
+
+        // Get data for weeks 1 through 6.
+        expect(getStatsWeekly(day(1, 0), day(7, 0)))
+            .toEqual([
+                { date: str(1, 0), value: 12 },
+                { date: str(2, 0), value: 23 },
+                { date: str(3, 0), value: 34 },
+                { date: str(4, 0), value: 55 },
+                { date: str(5, 0), value: 80 },
+            ])
     });
 });

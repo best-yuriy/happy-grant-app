@@ -1,5 +1,8 @@
 import { getData, putData } from "./LocalStorageService";
 import dayjs from "dayjs";
+import weekday from "dayjs/plugin/weekday";
+
+dayjs.extend(weekday);
 
 function _getHappinessStats() {
     const stats = (getData()['happiness-stats'] || [])
@@ -69,11 +72,29 @@ function getStatsDaily(startDate, endDate) {
     return stats.slice(maybeStartIndex, endIndex);
 }
 
-function getStatsWeekly(startDate, endDate) {
+function getStatsWeekly(startDate, endDate) {    
     startDate = _toCalendarDayString(startDate);
     endDate = _toCalendarDayString(endDate);
     
-    throw new Error("unimplemented")
+    const stats = getStatsDaily(startDate, endDate);
+    const res = [];
+
+    for (let i = 0; i < stats.length;) {
+        const weekStart = dayjs(stats[i].date).weekday(0);
+        const weekEnd = dayjs(stats[i].date).weekday(7);
+
+        var sum = 0;
+        var num = 0;
+        do {
+            sum += stats[i].value;
+            num++;
+            i++;
+        } while (i < stats.length && dayjs(stats[i].date).isBefore(weekEnd));
+
+        res.push({ date: _toCalendarDayString(weekStart), value: sum / num });
+    }
+
+    return res;
 }
 
 export { getStat, setStat, getStatsDaily, getStatsWeekly };
