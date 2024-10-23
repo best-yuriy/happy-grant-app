@@ -28,9 +28,9 @@ function DayHappinessPrompt() {
 
     function changeDays(numDays) {
         const newDate = state.date.add(numDays, 'day');
-        const priorRecord = getHappinessLevel(newDate) || {};
+        const happinessLevel = getHappinessLevel(newDate) || {};
         if (!dayjs().startOf('day').isBefore(newDate)) {
-            setState({ value: priorRecord.value, date: newDate });
+            setState({ value: happinessLevel, date: newDate });
         }
     }
 

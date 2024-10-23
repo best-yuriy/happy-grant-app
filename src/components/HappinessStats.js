@@ -122,7 +122,7 @@ function HappinessStats() {
     }
 
     const labels = dates.map(d => d.format('YYYY-MM-DD'));
-    const happinessData = stats.map(d => d.value);
+    const happinessData = stats;
 
     const chartData = {
         labels: labels,
