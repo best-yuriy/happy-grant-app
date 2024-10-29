@@ -1,5 +1,6 @@
 import './App.css';
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
+import AppRoute from './components/AppRoute';
 import DayHappinessPrompt from './components/DayHappinessPrompt';
 import HappinessStats from './components/HappinessStats';
 import NavHome from './assets/nav-home.svg'
@@ -18,9 +19,11 @@ function App() {
         </nav>
         <div id="main-content">
           <Routes>
-            <Route path="/" element={<DayHappinessPrompt />}></Route>
-            <Route path="/stats" element={<HappinessStats />}></Route>
-            <Route path="/info" element={<Info />}></Route>
+            <Route path="/info" element={<Info />} />
+            <Route element={<AppRoute />}>
+              <Route path="/" element={<DayHappinessPrompt />} />
+              <Route path="/stats" element={<HappinessStats />} />
+            </Route>
           </Routes>
         </div>
       </BrowserRouter>

@@ -1,6 +1,12 @@
 import './Info.css'
+import { putData } from '../services/LocalStorageService';
+
+const LastInfoDate = '2024-10-27';
+const LastSeenInfoDateStorageKey = 'lastSeenInfoDate'
 
 function Info() {
+    putData({ [LastSeenInfoDateStorageKey]: LastInfoDate });
+
     return (
         <div id='info'>
             <section>
@@ -12,3 +18,4 @@ function Info() {
 }
 
 export default Info;
+export { LastInfoDate, LastSeenInfoDateStorageKey };
