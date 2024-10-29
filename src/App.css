@@ -1,23 +1,12 @@
 .App {
+  max-width: 600px;
+  margin: auto;
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: stretch;
   text-align: center;
 }
-
-/* .App nav {
-  display: flow;
-  position: fixed;
-  padding: 1em 0;
-}
-
-.nav-item {
-  display: block;
-  padding: 1em;
-  text-decoration: none;
-  font-weight: bold;
-} */
 
 .App nav {
   display: flex;
