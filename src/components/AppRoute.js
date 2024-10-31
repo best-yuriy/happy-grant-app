@@ -4,7 +4,7 @@ import { LastInfoDate, LastSeenInfoDateStorageKey } from "./Info";
 
 function AppRoute() {
     
-    if (getData()[LastSeenInfoDateStorageKey] == LastInfoDate) {
+    if (getData()[LastSeenInfoDateStorageKey] === LastInfoDate) {
         return <Outlet />;
     }
     else {

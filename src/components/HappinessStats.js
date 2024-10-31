@@ -56,16 +56,6 @@ function chartOptions(labels) {
     };
 }
 
-// This is for test purposes. We should be using getHappinessLevel here.
-function ensureHappinessLevel(date) {
-    let res = getHappinessLevel(date);
-    if (res !== 0 && !res) {
-        res = Math.floor(Math.random() * 5) * 25;
-        setHappinessLevel(date, res);
-    }
-    return res;
-}
-
 // start: dayjs - the start date (inclusive)
 // end: dayjs - the end date (exclusive)
 // step: dayjs => dayjs - function to calculate the next date

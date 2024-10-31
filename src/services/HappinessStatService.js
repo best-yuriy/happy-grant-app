@@ -30,7 +30,7 @@ function getStat(date) {
     date = _toCalendarDayString(date);
 
     const stats = _getHappinessStats();
-    const stat = stats.find(element => element['date'] == date) || {};
+    const stat = stats.find(element => element['date'] === date) || {};
     return stat['value'];
 }
 
@@ -44,7 +44,7 @@ function setStat(date, value) {
         stats.push({ date, value });
         _putHappinessStats(stats);
     }
-    else if (stats[index]['date'] == date) {
+    else if (stats[index]['date'] === date) {
         stats[index]['value'] = value;
         _putHappinessStats(stats);
     }
