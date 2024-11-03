@@ -68,14 +68,21 @@ function DayHappinessPrompt() {
                     alt='back'
                     onClick={() => changeDays(-1)}
                 />
-                <div
-                    className='mood-selection flex-column flex-row-main'
-                >
-                    {happinessLevel(100, ecstatic,   'ecstatic'  )}
-                    {happinessLevel(75,  happy,      'happy'     )}
-                    {happinessLevel(50,  thoughtful, 'thoughtful')}
-                    {happinessLevel(25,  sad,        'sad'       )}
-                    {happinessLevel(0,   crying,     'crying'    )}
+                <div className='flex-row-main flex-column'>
+                    <div className='vertical-spacer'/>
+                    <div className='flex-column-main flex-row'>
+                        <div className='mood-selection flex-column'>
+                            {happinessLevel(100, ecstatic,   'ecstatic'  )}
+                            {happinessLevel(75,  happy,      'happy'     )}
+                            {happinessLevel(50,  thoughtful, 'thoughtful')}
+                            {happinessLevel(25,  sad,        'sad'       )}
+                            {happinessLevel(0,   crying,     'crying'    )}
+                        </div>
+                        <div className='mood-slider'>
+                            <div className='slider'></div>
+                        </div>
+                    </div>
+                    <div className='vertical-spacer'/>
                 </div>
                 <img
                     className='shift-day-button flex-row-fixed'

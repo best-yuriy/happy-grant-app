@@ -26,8 +26,21 @@
   border-radius: 10%;
 }
 
-#day-happiness-prompt .main .mood-selection {
-  justify-content: space-evenly;
+#day-happiness-prompt .main .flex-row-main {
+  height: 100%;
+}
+
+#day-happiness-prompt .main .flex-row-main .flex-column-main {
+  justify-content: center;
+}
+
+#day-happiness-prompt .main .flex-row-main .vertical-spacer {
+  min-height: 1em;
+  height: 10%;
+}
+
+.mood-selection {
+  justify-content: space-around;
   align-items: center;
 }
 
@@ -47,4 +60,11 @@
 .mood-selection .choice.selected {
   background-color: lightblue;
   border-color: grey;
+}
+
+.mood-slider .slider {
+  height: 100%;
+  width: 1em;
+  margin: 0 1em;
+  background-color: grey;
 }
