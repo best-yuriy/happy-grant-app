@@ -4,57 +4,47 @@
   flex-direction: column;
 }
 
-#day-happiness-prompt-header {
-  height: 10%;
-  align-content: center;
-  border-bottom: thin solid lightgrey;
+#day-happiness-prompt .header {
   font-size: 2em;
+  padding: 0.25em 0;
+  border-bottom: thin solid lightgrey;
   color: darkgrey;
   font-weight: bold;
 }
 
-#day-happiness-prompt-body {
-  height: 90%;
-  display: flex;
-  flex-direction: row;
+#day-happiness-prompt .main {
   align-items: center;
 }
 
-#day-happiness-prompt-left, #day-happiness-prompt-right {
+#day-happiness-prompt .main .shift-day-button {
   min-width: 5em;
   margin: 0 1em;
 }
 
-#day-happiness-prompt-left:hover, #day-happiness-prompt-right:hover {
+#day-happiness-prompt .main .shift-day-button:hover {
   background-color: lightgrey;
   border-radius: 10%;
 }
 
-#happiness-level-prompt {
-  flex: 1;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+#day-happiness-prompt .main .mood-selection {
   justify-content: space-evenly;
   align-items: center;
 }
 
-.happiness-level {
-  flex: 1;
-  display: block;
-  max-height: 14%;
-  padding: 0.5em;
+.mood-selection .choice {
+  max-width: 5em;
+  max-height: 5em;
+  margin: 1% 0;
   border: solid lightblue;
   border-radius: 10%;
 }
 
-.happiness-level:hover {
+.mood-selection .choice:hover {
   background-color: lightblue;
   border-color: darkgrey;
 }
 
-.happiness-level.selected {
+.mood-selection .choice.selected {
   background-color: lightblue;
   border-color: grey;
-
 }

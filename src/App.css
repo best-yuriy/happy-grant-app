@@ -1,15 +1,10 @@
 .App {
   max-width: 600px;
   margin: auto;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: stretch;
   text-align: center;
 }
 
 .App nav {
-  display: flex;
   padding: 1em 1em;
   border-bottom: thin solid lightgrey;
 }
@@ -27,11 +22,6 @@
 
 .nav-item:hover img {
   filter: invert(42%);
-}
-
-.App #main-content {
-  flex: 1;
-  overflow: scroll;
 }
 
 .App #footer {

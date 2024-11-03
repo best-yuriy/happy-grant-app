@@ -14,11 +14,12 @@ function HappinessLevel({ percent, alt, src, selected, onClick }) {
     return (
         <img
             key={`happiness-level-${percent}`}
-            className={`happiness-level${selected ? ' selected' : ''}`}
+            className={`choice flex-column-main${selected ? ' selected' : ''}`}
             src={src}
             alt={alt}
             onClick={onClick}
         />
+        
     );
 }
 
@@ -56,22 +57,28 @@ function DayHappinessPrompt() {
     }
 
     return (
-        <div id='day-happiness-prompt'>
-            <div id='day-happiness-prompt-header'>{state.date.format('MMM DD YYYY')}</div>
-            <div id='day-happiness-prompt-body'>
-                <img id='day-happiness-prompt-left'
+        <div id='day-happiness-prompt' className='flex-column'>
+            <div className='header flex-column-fixed'>
+                {state.date.format('MMM DD YYYY')}
+            </div>
+            <div className='main flex-column-main flex-row'>
+                <img
+                    className='shift-day-button flex-row-fixed'
                     src={chevronBackward}
                     alt='back'
                     onClick={() => changeDays(-1)}
                 />
-                <div id='happiness-level-prompt'>
+                <div
+                    className='mood-selection flex-column flex-row-main'
+                >
                     {happinessLevel(100, ecstatic,   'ecstatic'  )}
                     {happinessLevel(75,  happy,      'happy'     )}
                     {happinessLevel(50,  thoughtful, 'thoughtful')}
                     {happinessLevel(25,  sad,        'sad'       )}
                     {happinessLevel(0,   crying,     'crying'    )}
                 </div>
-                <img id='day-happiness-prompt-right'
+                <img
+                    className='shift-day-button flex-row-fixed'
                     src={chevronForward}
                     alt='forward'
                     onClick={() => changeDays(1)}
