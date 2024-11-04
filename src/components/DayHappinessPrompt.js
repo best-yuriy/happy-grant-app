@@ -9,6 +9,7 @@ import crying from '../assets/crying.png'
 import { useState } from 'react'
 import dayjs from 'dayjs'
 import { setHappinessLevel, getHappinessLevel } from '../services/HappinessLevelRepo'
+import { Direction, Range } from "react-range";
 
 function HappinessLevel({ percent, alt, src, selected, onClick }) {
     return (
@@ -23,16 +24,50 @@ function HappinessLevel({ percent, alt, src, selected, onClick }) {
     );
 }
 
+function SliderComponent({ value, setValue }) {
+    return (
+        <Range
+            label="Select your value"
+            step={5}
+            min={0}
+            max={100}
+            values={[value]}
+            onChange={(values) => setValue(values[0])}
+            direction={Direction.Up}
+            renderTrack={({ props, children }) => (
+                <div className='slider-track' {...props} style={props.style}>
+                    <div className='middle'/>
+                    {children}
+                </div>
+            )}
+            renderThumb={({ props }) => (
+                <div className='slider-thumb' {...props} style={props.style} key={props.key}>
+                    <div className='slider-thumb-label'>
+                        {value}
+                    </div>
+                </div>
+            )}
+        />
+    );
+}
+
 function DayHappinessPrompt() {
 
-    const [state, setState] = useState({ date: dayjs().startOf('day'), value: null });
+    const [state, setState] = useState({
+        date: dayjs().startOf('day'),
+        value: getHappinessLevel(dayjs().startOf('day')) || 50
+    });
 
     function changeDays(numDays) {
         const newDate = state.date.add(numDays, 'day');
-        const happinessLevel = getHappinessLevel(newDate) || {};
+        const happinessLevel = getHappinessLevel(newDate);
         if (!dayjs().startOf('day').isBefore(newDate)) {
             setState({ value: happinessLevel, date: newDate });
         }
+    }
+
+    function setHappinessLevelState(value) {
+        setState({ ...state, value });
     }
 
     function toggleHappinessLevel(value) {
@@ -40,15 +75,15 @@ function DayHappinessPrompt() {
         setState({ ...state, value: newValue });
     }
 
-    function happinessLevel(value, src, alt) {
+    function happinessLevel(minValue, maxValue, src, alt) {
         function onClick() {
-            setHappinessLevel(state.date, state.value === value ? null : value);
-            toggleHappinessLevel(value);
+            setHappinessLevel(state.date, state.value === minValue ? null : minValue);
+            toggleHappinessLevel(minValue);
         }
         return (
             <HappinessLevel
-                percent={value}
-                selected={state.value === value}
+                percent={minValue}
+                selected={state.value >= minValue && state.value < maxValue}
                 src={src}
                 altText={alt}
                 onClick={onClick}
@@ -69,20 +104,20 @@ function DayHappinessPrompt() {
                     onClick={() => changeDays(-1)}
                 />
                 <div className='flex-row-main flex-column'>
-                    <div className='vertical-spacer'/>
-                    <div className='flex-column-main flex-row'>
+                    <div className='mood-controls flex-column-main flex-row'>
                         <div className='mood-selection flex-column'>
-                            {happinessLevel(100, ecstatic,   'ecstatic'  )}
-                            {happinessLevel(75,  happy,      'happy'     )}
-                            {happinessLevel(50,  thoughtful, 'thoughtful')}
-                            {happinessLevel(25,  sad,        'sad'       )}
-                            {happinessLevel(0,   crying,     'crying'    )}
+                            {happinessLevel(80, 101, ecstatic,   'ecstatic'  )}
+                            {happinessLevel(60, 80,  happy,      'happy'     )}
+                            {happinessLevel(40, 60,  thoughtful, 'thoughtful')}
+                            {happinessLevel(20, 40,  sad,        'sad'       )}
+                            {happinessLevel(0, 20,   crying,     'crying'    )}
                         </div>
-                        <div className='mood-slider'>
-                            <div className='slider'></div>
-                        </div>
+                        <SliderComponent
+                            className='mood-slider'
+                            value={state.value}
+                            setValue={setHappinessLevelState}
+                        />
                     </div>
-                    <div className='vertical-spacer'/>
                 </div>
                 <img
                     className='shift-day-button flex-row-fixed'
