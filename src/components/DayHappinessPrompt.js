@@ -1,6 +1,7 @@
 import './DayHappinessPrompt.css'
 import chevronBackward from '../assets/chevron-backward.svg'
 import chevronForward from '../assets/chevron-forward.svg'
+import checkCircle from '../assets/check-circle.svg'
 import ecstatic from '../assets/ecstatic.png'
 import happy from '../assets/happy.png'
 import thoughtful from '../assets/thoughtful.png'
@@ -11,19 +12,6 @@ import dayjs from 'dayjs'
 import { setHappinessLevel, getHappinessLevel } from '../services/HappinessLevelRepo'
 import { Direction, Range } from "react-range";
 
-function HappinessLevel({ percent, alt, src, selected, onClick }) {
-    return (
-        <img
-            key={`happiness-level-${percent}`}
-            className={`choice flex-column-main${selected ? ' selected' : ''}`}
-            src={src}
-            alt={alt}
-            onClick={onClick}
-        />
-        
-    );
-}
-
 function SliderComponent({ value, setValue }) {
     return (
         <Range
@@ -33,7 +21,7 @@ function SliderComponent({ value, setValue }) {
             max={100}
             values={[value]}
             onChange={(values) => setValue(values[0])}
-            direction={Direction.Up}
+            direction={Direction.Right}
             renderTrack={({ props, children }) => (
                 <div className='slider-track' {...props} style={props.style}>
                     <div className='middle'/>
@@ -49,6 +37,14 @@ function SliderComponent({ value, setValue }) {
             )}
         />
     );
+}
+
+function moodImageFrom(moodValue) {
+    if (moodValue < 20) return crying;
+    if (moodValue < 40) return sad;
+    if (moodValue < 60) return thoughtful;
+    if (moodValue < 80) return happy;
+    return ecstatic;
 }
 
 function DayHappinessPrompt() {
@@ -70,62 +66,44 @@ function DayHappinessPrompt() {
         setState({ ...state, value });
     }
 
-    function toggleHappinessLevel(value) {
-        const newValue = state.value === value ? null : value
-        setState({ ...state, value: newValue });
-    }
-
-    function happinessLevel(minValue, maxValue, src, alt) {
-        function onClick() {
-            setHappinessLevel(state.date, state.value === minValue ? null : minValue);
-            toggleHappinessLevel(minValue);
-        }
-        return (
-            <HappinessLevel
-                percent={minValue}
-                selected={state.value >= minValue && state.value < maxValue}
-                src={src}
-                altText={alt}
-                onClick={onClick}
-            />
-        )
+    function displayIfMoodBetween(min, max) {
+        return { display: state.value >= min && state.value < max ? "block" : "none" };
     }
 
     return (
         <div id='day-happiness-prompt' className='flex-column'>
             <div className='header flex-column-fixed'>
-                {state.date.format('MMM DD YYYY')}
+                <span>{state.date.format('MMM DD YYYY')}</span>
             </div>
-            <div className='main flex-column-main flex-row'>
-                <img
-                    className='shift-day-button flex-row-fixed'
-                    src={chevronBackward}
-                    alt='back'
-                    onClick={() => changeDays(-1)}
-                />
-                <div className='flex-row-main flex-column'>
-                    <div className='mood-controls flex-column-main flex-row'>
-                        <div className='mood-selection flex-column'>
-                            {happinessLevel(80, 101, ecstatic,   'ecstatic'  )}
-                            {happinessLevel(60, 80,  happy,      'happy'     )}
-                            {happinessLevel(40, 60,  thoughtful, 'thoughtful')}
-                            {happinessLevel(20, 40,  sad,        'sad'       )}
-                            {happinessLevel(0, 20,   crying,     'crying'    )}
-                        </div>
-                        <SliderComponent
-                            className='mood-slider'
-                            value={state.value}
-                            setValue={setHappinessLevelState}
-                        />
+
+            <div className='flex-column-main'>
+                <div className='mood-prompt-controls flex-column'>
+
+                    <img className='mood-level-image' style={displayIfMoodBetween( 0, 20)}  src={crying}     alt='crying-face'/>
+                    <img className='mood-level-image' style={displayIfMoodBetween(20, 40)}  src={sad}        alt='sad-face'/>
+                    <img className='mood-level-image' style={displayIfMoodBetween(40, 60)}  src={thoughtful} alt='thoughtful-face'/>
+                    <img className='mood-level-image' style={displayIfMoodBetween(60, 80)}  src={happy}      alt='happy-face'/>
+                    <img className='mood-level-image' style={displayIfMoodBetween(80, 101)} src={ecstatic}   alt='ecstatic-face'/>
+
+                    <div className='mood-slider flex-column-fixed'>
+                        <SliderComponent value={state.value} setValue={setHappinessLevelState}/>
                     </div>
+
+                    <div className='buttons flex-column-fixed flex-row'>
+                        <div className='button'>
+                            <img src={chevronBackward} alt='back' onClick={() => changeDays(-1)}/>
+                        </div>
+                        <div className='button primary'>
+                            <img src={checkCircle} alt='save'/>
+                        </div>
+                        <div className='button'>
+                            <img src={chevronForward} alt='forward' onClick={() => changeDays(1)}/>
+                        </div>
+                    </div>
+
                 </div>
-                <img
-                    className='shift-day-button flex-row-fixed'
-                    src={chevronForward}
-                    alt='forward'
-                    onClick={() => changeDays(1)}
-                />
             </div>
+
         </div>
     );
 }
