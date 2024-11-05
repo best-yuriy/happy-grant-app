@@ -15,7 +15,6 @@ body {
 .flex-row {
   display: flex;
   flex-direction: row;
-  width: 100%;
 }
 
 .flex-row-fixed {
