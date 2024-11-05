@@ -10,21 +10,29 @@ import crying from '../assets/crying.png'
 import { useState } from 'react'
 import dayjs from 'dayjs'
 import { setHappinessLevel, getHappinessLevel } from '../services/HappinessLevelRepo'
-import { Direction, Range } from "react-range";
+import { Direction, Range, getTrackBackground } from "react-range";
 
 function SliderComponent({ value, setValue }) {
     return (
         <Range
             label="Select your value"
-            step={5}
+            step={1}
             min={0}
             max={100}
             values={[value]}
             onChange={(values) => setValue(values[0])}
             direction={Direction.Right}
             renderTrack={({ props, children }) => (
-                <div className='slider-track' {...props} style={props.style}>
-                    <div className='middle'/>
+                <div
+                    className='slider-track'
+                    {...props}
+                    style={{...props.style, background: getTrackBackground({
+                        values: [value],
+                        colors: ["#add8e6", "#d3d3d3"],
+                        min: 0,
+                        max: 100
+                    })}}
+                >
                     {children}
                 </div>
             )}
