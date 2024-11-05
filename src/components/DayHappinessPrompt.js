@@ -97,11 +97,13 @@ function DayHappinessPrompt() {
             <div className='flex-column-main'>
                 <div className='mood-prompt-controls flex-column'>
 
-                    <img className='mood-level-image' style={displayIfMoodBetween( 0, 20)}  src={crying}     alt='crying-face'/>
-                    <img className='mood-level-image' style={displayIfMoodBetween(20, 40)}  src={sad}        alt='sad-face'/>
-                    <img className='mood-level-image' style={displayIfMoodBetween(40, 60)}  src={thoughtful} alt='thoughtful-face'/>
-                    <img className='mood-level-image' style={displayIfMoodBetween(60, 80)}  src={happy}      alt='happy-face'/>
-                    <img className='mood-level-image' style={displayIfMoodBetween(80, 101)} src={ecstatic}   alt='ecstatic-face'/>
+                    <div className='flex-column-main'>
+                        <img className='mood-level-image' style={displayIfMoodBetween( 0, 20)}  src={crying}     alt='crying-face'/>
+                        <img className='mood-level-image' style={displayIfMoodBetween(20, 40)}  src={sad}        alt='sad-face'/>
+                        <img className='mood-level-image' style={displayIfMoodBetween(40, 60)}  src={thoughtful} alt='thoughtful-face'/>
+                        <img className='mood-level-image' style={displayIfMoodBetween(60, 80)}  src={happy}      alt='happy-face'/>
+                        <img className='mood-level-image' style={displayIfMoodBetween(80, 101)} src={ecstatic}   alt='ecstatic-face'/>
+                    </div>
 
                     <div className='mood-slider flex-column-fixed'>
                         <SliderComponent value={state.value} setValue={setHappinessLevelState}/>

@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  height: 100vh;
+  height: 100dvh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -17,13 +17,8 @@ body {
   flex-direction: row;
 }
 
-.flex-row-fixed {
+.flex-row .flex-row-fixed {
   flex: 0 0;
-}
-
-.flex-row-main {
-  flex: 1 1;
-  overflow: scroll;
 }
 
 .flex-column {

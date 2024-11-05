@@ -37,8 +37,14 @@
   color: black;
 }
 
+.mood-prompt-controls .flex-column-main {
+  align-content: center;
+}
+
 .mood-prompt-controls .mood-level-image {
-  padding: 2em;
+  max-width: 80%;
+  max-height: 80%;
+  margin: auto;
 }
 
 .mood-prompt-controls .buttons {
