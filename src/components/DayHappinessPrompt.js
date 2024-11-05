@@ -25,11 +25,14 @@ function HappinessLevel({ percent, alt, src, selected, onClick }) {
 
 function DayHappinessPrompt() {
 
-    const [state, setState] = useState({ date: dayjs().startOf('day'), value: null });
+    const [state, setState] = useState({
+        date: dayjs().startOf('day'),
+        value: getHappinessLevel(dayjs().startOf('day'))
+    });
 
     function changeDays(numDays) {
         const newDate = state.date.add(numDays, 'day');
-        const happinessLevel = getHappinessLevel(newDate) || {};
+        const happinessLevel = getHappinessLevel(newDate);
         if (!dayjs().startOf('day').isBefore(newDate)) {
             setState({ value: happinessLevel, date: newDate });
         }
