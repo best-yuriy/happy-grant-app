@@ -61,6 +61,10 @@
   height: 5em;
 }
 
+.mood-prompt-controls .buttons .button.primary.locked {
+  background-color: rgb(192, 225, 192);
+}
+
 .mood-prompt-controls .buttons .button img {
   width: 3em;
   height: 3em;

@@ -49,21 +49,31 @@ function moodImageFrom(moodValue) {
 
 function DayHappinessPrompt() {
 
-    const [state, setState] = useState({
-        date: dayjs().startOf('day'),
-        value: getHappinessLevel(dayjs().startOf('day')) || 50
-    });
+    const today = () => dayjs().startOf('day');
+
+    function initState(date) {
+        const existingValue = getHappinessLevel(date);
+        return { date, value: existingValue || 80, savedValue: existingValue };
+    }
+
+    const [state, setState] = useState(initState(today()));
 
     function changeDays(numDays) {
         const newDate = state.date.add(numDays, 'day');
-        const happinessLevel = getHappinessLevel(newDate);
-        if (!dayjs().startOf('day').isBefore(newDate)) {
-            setState({ value: happinessLevel, date: newDate });
+        if (!today().isBefore(newDate)) {
+            setState(initState(newDate));
         }
     }
 
     function setHappinessLevelState(value) {
         setState({ ...state, value });
+    }
+
+    function saveHappinessLevel() {
+        if (state.value !== state.savedValue) {
+            setHappinessLevel(state.date, state.value);
+            setState({ ...state, savedValue: state.value });
+        }
     }
 
     function displayIfMoodBetween(min, max) {
@@ -90,14 +100,17 @@ function DayHappinessPrompt() {
                     </div>
 
                     <div className='buttons flex-column-fixed flex-row'>
-                        <div className='button'>
-                            <img src={chevronBackward} alt='back' onClick={() => changeDays(-1)}/>
+                        <div className='button' onClick={() => changeDays(-1)}>
+                            <img src={chevronBackward} alt='back'/>
                         </div>
-                        <div className='button primary'>
+                        <div
+                            className={`button primary${state.value === state.savedValue ? ' locked' : ''}`}
+                            onClick={() => saveHappinessLevel()}
+                        >
                             <img src={checkCircle} alt='save'/>
                         </div>
-                        <div className='button'>
-                            <img src={chevronForward} alt='forward' onClick={() => changeDays(1)}/>
+                        <div className='button' onClick={() => changeDays(1)}>
+                            <img src={chevronForward} alt='forward'/>
                         </div>
                     </div>
 
