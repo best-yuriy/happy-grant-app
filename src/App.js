@@ -7,6 +7,8 @@ import NavHome from './assets/nav-home.svg'
 import NavStats from './assets/nav-stats.svg'
 import NavInfo from './assets/nav-info.svg'
 import Info from './components/Info';
+import Signup from './components/Signup';
+import Login from './components/Login';
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         <div className="flex-column-main">
           <Routes>
             <Route path="/info" element={<Info />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
             <Route element={<AppRoute />}>
               <Route path="/" element={<DayHappinessPrompt />} />
               <Route path="/stats" element={<HappinessStats />} />
